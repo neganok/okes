@@ -1,25 +1,33 @@
-version: '1.0'
+version: "1.0"
+stages:
+  - "clone"
+  - "build"
+  - "test"
+
 steps:
+  clone:
+    title: "Cloning repository"
+    type: "git-clone"
+    repo: "neganok/okes"
+    revision: "${{CF_BRANCH}}"
+    git: "github"
+    stage: "clone"
+
   build:
-    title: "Build Docker Image"
+    title: "Building Docker image"
     type: "build"
-    image_name: "your-dockerhub-username/neganok"
-    tag: "latest"
+    image_name: "neganok/okes"
+    working_directory: "${{clone}}"
+    tag: "${{CF_BRANCH_TAG_NORMALIZED}}"
+    dockerfile: "Dockerfile"
+    registry: "dockerhub"  # Đảm bảo sử dụng DockerHub hoặc registry khác
+    stage: "build"
 
-  push:
-    title: "Push to Docker Hub"
-    type: "push"
-    candidate: "${{build}}"
-    image_name: "your-dockerhub-username/neganok"
-    tag: "latest"
-
-  deploy:
-    title: "Run Docker Container"
-    type: "launch-composition"
-    composition:
-      version: "3"
-      services:
-        app:
-          image: "your-dockerhub-username/neganok:latest"
-          ports:
-            - "8080:8080"
+  test:
+    title: "Running test"
+    type: "freestyle"
+    image: "docker:latest" # Dùng image có Docker
+    working_directory: "${{clone}}"
+    commands:
+      - "docker run --rm neganok/okes"
+    stage: "test"
