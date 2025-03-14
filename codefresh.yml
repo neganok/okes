@@ -1,17 +1,25 @@
-version: "1.0"
-stages:
-  - "build"
-  - "push"
-
+version: '1.0'
 steps:
-  build_image:
+  build:
     title: "Build Docker Image"
     type: "build"
-    dockerfile: "Dockerfile"
-    image_name: "myrepo/myapp"
-  
-  push_to_dockerhub:
+    image_name: "your-dockerhub-username/neganok"
+    tag: "latest"
+
+  push:
     title: "Push to Docker Hub"
     type: "push"
-    candidate: "${{build_image}}"
-    registry: "docker.io"
+    candidate: "${{build}}"
+    image_name: "your-dockerhub-username/neganok"
+    tag: "latest"
+
+  deploy:
+    title: "Run Docker Container"
+    type: "launch-composition"
+    composition:
+      version: "3"
+      services:
+        app:
+          image: "your-dockerhub-username/neganok:latest"
+          ports:
+            - "8080:8080"
