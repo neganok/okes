@@ -1,14 +1,13 @@
 version: "1.0"
-
 stages:
   - "setup"
 
 steps:
-  setup_vm:
-    title: "Cấu hình môi trường VM"
+  setup:
+    title: "Cài đặt môi trường"
     type: "freestyle"
-    image: "ubuntu:latest"  # Sử dụng Ubuntu chính thức từ Codefresh VM
+    image: "ubuntu:latest"
     commands:
-      - "apt update && apt install -y neofetch"  # Cài đặt neofetch
-      - "neofetch"  # Hiển thị thông tin hệ thống
+      - "apt update && apt install -y neofetch"
+      - "neofetch"
     stage: "setup"
