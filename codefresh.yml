@@ -1,0 +1,17 @@
+version: "1.0"
+stages:
+  - "build"
+  - "push"
+
+steps:
+  build_image:
+    title: "Build Docker Image"
+    type: "build"
+    dockerfile: "Dockerfile"
+    image_name: "myrepo/myapp"
+  
+  push_to_dockerhub:
+    title: "Push to Docker Hub"
+    type: "push"
+    candidate: "${{build_image}}"
+    registry: "docker.io"
