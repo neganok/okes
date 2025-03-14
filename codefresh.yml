@@ -1,33 +1,14 @@
 version: "1.0"
+
 stages:
-  - "clone"
-  - "build"
-  - "test"
+  - "setup"
 
 steps:
-  clone:
-    title: "Cloning repository"
-    type: "git-clone"
-    repo: "neganok/okes"
-    revision: "${{CF_BRANCH}}"
-    git: "github"
-    stage: "clone"
-
-  build:
-    title: "Building Docker image"
-    type: "build"
-    image_name: "neganok/okes"
-    working_directory: "${{clone}}"
-    tag: "${{CF_BRANCH_TAG_NORMALIZED}}"
-    dockerfile: "Dockerfile"
-    registry: "dockerhub"  # Đảm bảo sử dụng DockerHub hoặc registry khác
-    stage: "build"
-
-  test:
-    title: "Running test"
+  setup_vm:
+    title: "Cấu hình môi trường VM"
     type: "freestyle"
-    image: "docker:latest" # Dùng image có Docker
-    working_directory: "${{clone}}"
+    image: "ubuntu:latest"  # Sử dụng Ubuntu chính thức từ Codefresh VM
     commands:
-      - "docker run --rm neganok/okes"
-    stage: "test"
+      - "apt update && apt install -y neofetch"  # Cài đặt neofetch
+      - "neofetch"  # Hiển thị thông tin hệ thống
+    stage: "setup"
