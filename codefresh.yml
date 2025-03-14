@@ -7,7 +7,7 @@ stages:
   - "clone"
   - "build"
   - "test"
-
+ 
 steps:
   clone:
     title: "Cloning repository"
